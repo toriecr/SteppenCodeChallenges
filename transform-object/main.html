@@ -7,7 +7,51 @@
       //
       // TODO: Implement this function.
       //
-      const transformObject = () => {}
+      const transformObject = (obj) => {
+        const transformValue = (value) => {
+          if (typeof value === 'number') return value + 6
+          if (typeof value === 'string') return value + ' BLARGH'
+          if (Array.isArray(value)) return value.map(transformValue)
+          if (typeof value === 'object') return transformObject(value)
+          return value
+        }
+
+        const newTransformedObj = {}
+        for (const key in obj) {
+          newTransformedObj[key] = transformValue(obj[key])
+        }
+
+        return newTransformedObj
+      }
+
+      // Extra test case
+      const testObj = {
+        "a": 2,
+        "b": "test",
+        "purple": [
+          {
+            "a": -6,
+            "b": "",
+            "c": ["hello", 6, 7.7],
+            "d": "6asdf"
+          }
+        ]
+      }
+      const expectedObj = {
+        "a": 8,
+        "b": "test BLARGH",
+        "purple": [
+          {
+            "a": 0,
+            "b": " BLARGH",
+            "c": ["hello BLARGH", 12, 13.7],
+            "d": "6asdf BLARGH"
+          }
+        ]
+      }
+      console.log(transformObject(testObj))
+      console.log(expectedObj)
+      console.log(JSON.stringify(transformObject(testObj)) === JSON.stringify(expectedObj) ? "It passed!" : "It failed :(")
     </script>
   </head>
 
