@@ -7,7 +7,29 @@
       //
       // TODO: Implement this function.
       //
-      const getMovieList = () => {}
+      const getMovieList = async (year) => {
+        const currentYear = new Date().getFullYear()
+        if (isNaN(year)) throw 'Not a valid year.'
+        if (year > currentYear) throw 'That year has not happened yet.'
+        const endpoint = `https://jsonmock.hackerrank.com/api/movies?Year=${year}&page=1`
+        try {
+          const response = await fetch(endpoint)
+          const data = await response.json()
+          if (data.data.length === 0) return []
+
+          const titles = data.data.map((movie) => movie.Title)
+          return titles.sort()
+        } catch (error) {
+          console.error('Error fetching movie list: ', error)
+          throw error
+        }
+      }
+
+      // Additional test cases
+      getMovieList("2012a").then((result) => console.log(result)) // Not a valid year.
+      getMovieList({}).then((result) => console.log(result)) // Not a valid year.
+      getMovieList().then((result) => console.log(result)) // Not a valid year.
+      getMovieList(2100).then((result) => console.log(result)) // That year has not happened yet.
     </script>
   </head>
 
