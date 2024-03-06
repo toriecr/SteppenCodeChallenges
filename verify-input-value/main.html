@@ -7,9 +7,23 @@
       //
       // TODO: Implement this function.
       //
-      const makeInputVerifier = () => {
-        return () => {}
+      const makeInputVerifier = (minimum, maximum) => {
+        const verify = (inputValue) => {
+          if (isNaN(inputValue)) return 'Input is not a number'
+          if (minimum > maximum) return 'ERROR'
+          if (inputValue < minimum) return 'Input is less than minimum value'
+          if (inputValue > maximum) return 'Input is more than maximum value'
+          return 'Input is in range'
+        }
+        return verify
       }
+
+        // Test cases
+        const verifyInput = makeInputVerifier(0, 10);
+        console.log(verifyInput(-100) + " >> Expected Input is less than minimum value" );
+        console.log(verifyInput(5) + " >> Expected Input is in range");
+        console.log(verifyInput(11) + " >> Expected Input is more than maximum value");
+        console.log(verifyInput("dog") + " >> Expected Input is not a number");
     </script>
   </head>
 
