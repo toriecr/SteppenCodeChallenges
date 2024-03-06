@@ -11,3 +11,52 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Bulma overrides */
+
+.custom-container {
+  padding-bottom: 50px;
+}
+
+.hovered p {
+  transition: margin-left 0.3s ease-out;
+  margin-left: 40px;
+}
+
+.hovered .buttons {
+  transition: width 0.3s ease-out;
+  width: 50px;
+}
+
+
+.buttons {
+  display: flex;
+  align-items: flex-start !important;
+  margin-right: 0 !important;
+}
+
+.buttons .button {
+  margin-bottom: 0 !important;
+  width: 100%;
+  padding: 17px;
+  border-bottom-right-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+}
+
+.button.is-info {
+  border-bottom-left-radius: 0px !important;
+}
+
+.button.is-danger {
+  border-top-left-radius: 0px !important;
+}
+
+.custom-input {
+  border-color: #fff !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.custom-input:focus {
+  outline: none !important;
+}
