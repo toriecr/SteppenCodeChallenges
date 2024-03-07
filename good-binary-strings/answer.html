@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Largest Good String</title>
+</head>
+<body>
+
+<script>
+  /* TASK 1: Validate if string is a good string */
+  const isGoodString = (string) => {
+    // Conditions for good string:
+    // 1. Number of 0s === Number of 1s
+    // 2. For every prefix of the binary string, the number of 1s >= number of 0s
+
+    if (string[0] === '0') return false
+
+    // Good string condition 1: Check for equal amount of 0s to 1s
+    let numZeros = 0
+    let numOnes = 0
+
+    for (let i = 0; i < string.length; i++) {
+      if (string[i] === '0') numZeros += 1
+      if (string[i] === '1') numOnes += 1
+    }
+
+    if (numZeros !== numOnes) return false
+
+    // Good string condition 2: Check if no. 1s >= no. 0s for every prefix
+    for (let i = 0; i < string.length; i++) {
+      const prefix = string.slice(0, i + 1)
+      let numPreZeros = 0
+      let numPreOnes = 0
+    
+      for (let j = 0; j < prefix.length; j++) {
+        if (prefix[j] === "0") numPreZeros += 1
+        if (prefix[j] === "1") numPreOnes += 1
+        
+        if (numPreZeros > numPreOnes) {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+
+  const largestGood = (binString) => {
+    // Immediately return if invalid strings
+    if (!binString) return 'Not a valid string'
+    if (binString.length === 0) return 'Empty string'
+    if (typeof binString !== 'string') return 'Not valid string'
+    const binaryPattern = /^[01]+$/
+    if (!binaryPattern.test(binString)) return 'Not a valid binary string'
+
+    /* TASK 2: Find all good possible substrings and its indexes 
+      To do this, we need to check from left to right
+    */
+   
+    const allGoodStrings = []  // [startIndex, lastIndex, string]
+
+    for (let i = 0; i < binString.length; i++) {
+      const currentSubstring = binString.slice(i)
+
+      if (currentSubstring[0] === '0') continue // fails prefix condition
+
+      // Check if current substring's prefixes are good
+      for (let j = 0; j < currentSubstring.length; j++) {
+        const prefix = currentSubstring.slice(0, j + 1)
+        if (isGoodString(prefix)) {
+          allGoodStrings.push([i, i + j, prefix])
+        }
+      }
+    }
+
+    /* TASK 3: After finding all good possible strings, find 
+      which of those strings are consecutive strings.
+      Check every array element against each other
+    */
+    for (let i = 0; i < allGoodStrings.length; i++) {
+      const [startIndex1, endIndex1, string1] = allGoodStrings[i]
+
+      for (let j = 1; j < allGoodStrings.length; j++) {
+        const [startIndex2, endIndex2, string2] = allGoodStrings[j]
+
+        // Consecutive if last digit of first substring is one index before first digit of 2nd string
+        if (endIndex1 + 1 === startIndex2) {
+          
+          /* TASK 4: If consecutive, only swap if doing so makes the integer bigger */ 
+
+          const firstInt = parseInt(string1, 2)
+          const secondInt = parseInt(string2, 2)
+
+          if (secondInt > firstInt) {
+            // leave original string start/end digits untouched
+            const ogStringStart = binString.slice(0, startIndex1)
+            const ogStringEnd = binString.slice(endIndex2 + 1)
+
+            const swappedPart = binString.slice(startIndex2, endIndex2 + 1) + binString.slice(startIndex1, endIndex1 + 1)
+
+            return largestGood(ogStringStart + swappedPart + ogStringEnd) // repeat process
+          }
+        }
+      }
+    }
+    // if no consecutive combinations OR swapping does not maximize integer, return answer
+    return binString
+  }
+
+  // Test cases
+  console.log('Input: 11011000 >> Expected output: 11100100 >> Actual: ' + largestGood('11011000'))
+  console.log('Input: 1100 >> Expected output: 1100 >> Actual: ' + largestGood('1100'))
+  console.log('Input: 10111000 >> Expected output: 11100010 >> Actual: ' + largestGood('10111000'))
+  console.log('Input: null >> Expected output: Not a valid string >> Actual: ' + largestGood(null))
+  console.log("Input: '5353' >> Expected output: Not a valid binary string >> Actual: " + largestGood('5353'))
+  console.log('Input: 5353 >> Expected output: Not a valid string >> Actual: ' + largestGood(5353))
+
+</script>
+
+</body>
+</html>
